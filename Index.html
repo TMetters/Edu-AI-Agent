@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Edu AI Marker</title>
+    <style>
+      body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+      input, textarea { width: 100%; margin-bottom: 10px; padding: 8px; }
+      button { padding: 10px 20px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+      #result { margin-top: 20px; padding: 10px; background: #f0f0f0; }
+    </style>
+  </head>
+  <body>
+    <h1>Edu AI Marker</h1>
+    <label>Subject (e.g., Biology):</label>
+    <input id="subject" placeholder="Biology" />
+
+    <label>Task (e.g., Explain photosynthesis):</label>
+    <input id="task" placeholder="Explain photosynthesis" />
+
+    <label>Student Response:</label>
+    <textarea id="student_text" rows="6" placeholder="Type student text here..."></textarea>
+
+    <button onclick="send()">Get Grade & Feedback</button>
+
+    <div id="result"></div>
+
+    <script>
+      async function send() {
+        let data = {
+          subject: document.getElementById('subject').value,
+          task: document.getElementById('task').value,
+          student_text: document.getElementById('student_text').value
+        };
+        document.getElementById('result').innerText = '...grading...';
+        let resp = await fetch('/grade', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        let json = await resp.json();
+        document.getElementById('result').innerText = json.result || json.error;
+      }
+    </script>
+  </body>
+</html>
